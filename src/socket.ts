@@ -7,37 +7,45 @@ export interface ServerToClientEvents {
     "match:reset": () => void;
     "score.coral:add": (data: {
         alliance: "red" | "blue";
+        auto: boolean;
         level: "l4" | "l3" | "l2";
         branch: "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l";
     }) => void;
     "score.coral:remove": (data: {
         alliance: "red" | "blue";
+        auto: boolean;
         level: "l4" | "l3" | "l2";
         branch: "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l";
     }) => void;
     "score.coral.through:add": (data: {
         alliance: "red" | "blue";
+        auto: boolean;
         count: number;
     }) => void;
     "score.coral.through:remove": (data: {
         alliance: "red" | "blue";
+        auto: boolean;
         count: number;
     }) => void;
 
     "score.algae.net:add": (data: {
         alliance: "red" | "blue";
+        auto: boolean;
         count: number;
     }) => void;
     "score.algae.net:remove": (data: {
         alliance: "red" | "blue";
+        auto: boolean;
         count: number;
     }) => void;
     "score.algae.processor:add": (data: {
         alliance: "red" | "blue";
+        auto: boolean;
         count: number;
     }) => void;
     "score.algae.processor:remove": (data: {
         alliance: "red" | "blue";
+        auto: boolean;
         count: number;
     }) => void;
 

@@ -1,8 +1,7 @@
 :root {
     font-family: "Outfit", "Arial", "sans-serif";
     font-optical-sizing: auto;
-
-    --status-bar-c: tomato;
+    font-size: 1.1rem;
 }
 
 .hr_vert {
@@ -35,6 +34,19 @@ p, h1, h2, h3, h4, h5, h6 {
 
 h2, h3, h4, h5, h6 {
     margin-bottom: 3px;
+}
+
+.flash {
+    animation: flash-bg 0.4s;
+}
+
+@keyframes flash-bg {
+    0% {
+        background: #ffe066;
+    }
+    100% {
+        background: transparent;
+    }
 }
 
 .copyright {

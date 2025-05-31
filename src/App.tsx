@@ -40,9 +40,14 @@ export default function App() {
         red: createInitialReefCheckboxes(),
         blue: createInitialReefCheckboxes()
     });
-    const [netCount, setNetCount] = useState({red: 0, blue: 0});
-    const [processorCount, setProcessorCount] = useState({red: 0, blue: 0});
-    const [throughCount, setThroughCount] = useState({red: 0, blue: 0});
+    const [netCountAuto, setNetCountAuto] = useState({red: 0, blue: 0});
+    const [processorCountAuto, setProcessorCountAuto] = useState({red: 0, blue: 0});
+    const [throughCountAuto, setThroughCountAuto] = useState({red: 0, blue: 0});
+
+    const [netCountTeleop, setNetCountTeleop] = useState({red: 0, blue: 0});
+    const [processorCountTelop, setProcessorCountTelop] = useState({red: 0, blue: 0});
+    const [throughCountTeleop, setThroughCountTeleop] = useState({red: 0, blue: 0});
+
     const [minorFoulCount, setMinorFoulCount] = useState({red: 0, blue: 0});
     const [majorFoulCount, setMajorFoulCount] = useState({red: 0, blue: 0});
     const [adjustmentFoulCount, setAdjustmentFoulCount] = useState({red: 0, blue: 0});
@@ -66,15 +71,18 @@ export default function App() {
         socket.on("match:end", () => setMatchStatus("🔴 Ended"));
         socket.on("match:reset", () => {
             setMatchStatus("⏳ Awaiting...");
-            setNetCount({red: 0, blue: 0});
-            setProcessorCount({red: 0, blue: 0});
-            setThroughCount({red: 0, blue: 0});
+            setNetCountTeleop({red: 0, blue: 0});
+            setProcessorCountAuto({red: 0, blue: 0});
+            setProcessorCountTelop({red: 0, blue: 0});
+            setThroughCountAuto({red: 0, blue: 0});
+            setThroughCountTeleop({red: 0, blue: 0});
             setMinorFoulCount({red: 0, blue: 0});
             setMajorFoulCount({red: 0, blue: 0});
             setAdjustmentFoulCount({red: 0, blue: 0});
             setReefCheckboxes({red: createInitialReefCheckboxes(), blue: createInitialReefCheckboxes()});
             setAutoLeaveDropdowns({red: createInitialDropdowns(), blue: createInitialDropdowns()});
             setEndgameDropdowns({red: createInitialDropdowns(), blue: createInitialDropdowns()});
+
         });
 
         socket.on("score.auto.leave:set", (data) => {
@@ -102,22 +110,46 @@ export default function App() {
         });
 
         socket.on("score.algae.net:add", (data) => {
-            setNetCount(prev => ({...prev, [data.alliance]: prev[data.alliance] + data.count}));
+            if (data.auto) {
+                setNetCountAuto(prev => ({...prev, [data.alliance]: prev[data.alliance] + data.count}));
+            } else {
+                setNetCountTeleop(prev => ({...prev, [data.alliance]: prev[data.alliance] + data.count}));
+            }
         });
         socket.on("score.algae.net:remove", (data) => {
-            setNetCount(prev => ({...prev, [data.alliance]: Math.max(0, prev[data.alliance] - data.count)}));
+            if (data.auto) {
+                setNetCountAuto(prev => ({...prev, [data.alliance]: Math.max(0, prev[data.alliance] - data.count)}));
+            } else {
+                setNetCountTeleop(prev => ({...prev, [data.alliance]: Math.max(0, prev[data.alliance] - data.count)}));
+            }
         });
         socket.on("score.algae.processor:add", (data) => {
-            setProcessorCount(prev => ({...prev, [data.alliance]: prev[data.alliance] + data.count}));
+            if (data.auto) {
+                setProcessorCountAuto(prev => ({...prev, [data.alliance]: prev[data.alliance] + data.count}));
+            } else {
+                setProcessorCountTelop(prev => ({...prev, [data.alliance]: prev[data.alliance] + data.count}));
+            }
         });
         socket.on("score.algae.processor:remove", (data) => {
-            setProcessorCount(prev => ({...prev, [data.alliance]: Math.max(0, prev[data.alliance] - data.count)}));
+            if (data.auto) {
+                setProcessorCountAuto(prev => ({...prev, [data.alliance]: Math.max(0, prev[data.alliance] - data.count)}));
+            } else {
+                setProcessorCountTelop(prev => ({...prev, [data.alliance]: Math.max(0, prev[data.alliance] - data.count)}));
+            }
         });
         socket.on("score.coral.through:add", (data) => {
-            setThroughCount(prev => ({...prev, [data.alliance]: prev[data.alliance] + data.count}));
+            if (data.auto) {
+                setThroughCountAuto(prev => ({...prev, [data.alliance]: prev[data.alliance] + data.count}));
+            } else {
+                setThroughCountTeleop(prev => ({...prev, [data.alliance]: prev[data.alliance] + data.count}));
+            }
         });
         socket.on("score.coral.through:remove", (data) => {
-            setThroughCount(prev => ({...prev, [data.alliance]: Math.max(0, prev[data.alliance] - data.count)}));
+            if (data.auto) {
+                setThroughCountAuto(prev => ({...prev, [data.alliance]: Math.max(0, prev[data.alliance] - data.count)}));
+            } else {
+                setThroughCountTeleop(prev => ({...prev, [data.alliance]: Math.max(0, prev[data.alliance] - data.count)}));
+            }
         });
 
         socket.on("score.coral:add", (data) => {
@@ -125,7 +157,7 @@ export default function App() {
                 ...prev,
                 [data.alliance]: {
                     ...prev[data.alliance],
-                    [`${data.level}-${data.branch}`]: true
+                    [`${data.level}-${data.branch}-${data.auto}`]: true
                 }
             }));
         });
@@ -134,7 +166,7 @@ export default function App() {
                 ...prev,
                 [data.alliance]: {
                     ...prev[data.alliance],
-                    [`${data.level}-${data.branch}`]: false
+                    [`${data.level}-${data.branch}-${data.auto}`]: false
                 }
             }));
         });
@@ -175,13 +207,13 @@ export default function App() {
                         <table>
                             <thead>
                             <tr>
-                                <th>Robot #</th>
+                                <th>#</th>
                                 <th>Leave?</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {([1, 2, 3] as const).map((robot) => (<tr key={robot}>
-                                <td>{robot}</td>
+                            {([3, 2, 1] as const).map((robot) => (<tr key={robot}>
+                                <th>{robot}</th>
                                 <td>
                                     <span>{autoLeaveDropdowns[alliance][robot]}</span>
                                 </td>
@@ -195,13 +227,13 @@ export default function App() {
                         <table>
                             <thead>
                             <tr>
-                                <th>Robot #</th>
+                                <th>#</th>
                                 <th>Position</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {([1, 2, 3] as const).map((robot) => (<tr key={robot}>
-                                <td>{robot}</td>
+                            {([3, 2, 1] as const).map((robot) => (<tr key={robot}>
+                                <th>{robot}</th>
                                 <td>
                                     <span>{endgameDropdowns[alliance][robot]}</span>
                                 </td>
@@ -211,7 +243,7 @@ export default function App() {
                     </div>
                     <div className="hr_vert" />
                     <div className="container_col">
-                        <h3>🟦 FOULS</h3>
+                        <h3>🚩 FOULS</h3>
                         <table>
                             <thead>
                             <tr>
@@ -236,6 +268,23 @@ export default function App() {
                 </div>
                 <div className="container_row">
                     <div className="container_col">
+                        <table>
+                            <thead>
+                            <tr style={{fontSize: "1.25rem"}}>
+                                <th>L1</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr style={{fontSize: "1.5rem"}}>
+                                <td>
+                                    <p>🤖 {throughCountAuto[alliance]}</p>
+                                    <p>🎮 {throughCountTeleop[alliance]}</p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="container_col">
                         <table className="reef-table">
                             <thead>
                             <tr>
@@ -252,7 +301,8 @@ export default function App() {
                                     {BRANCHES.map((branch) => (
                                         <td key={`${level}-${branch}`}>
                                             <div className="reef-grid-cell">
-                                                {reefCheckboxes[alliance][`${level}-${branch}`] ? "✔" : ""}
+                                                {reefCheckboxes[alliance][`${level}-${branch}-true`] ? "🤖" : ""}
+                                                {reefCheckboxes[alliance][`${level}-${branch}-false`] ? "🪸" : ""}
                                             </div>
                                         </td>
                                     ))}
@@ -264,23 +314,21 @@ export default function App() {
                     <div className="container_col">
                         <table>
                             <thead>
-                            <tr>
+                            <tr style={{fontSize: "1.25rem"}}>
                                 <th>Net</th>
                                 <th>Processor</th>
-                                <th>L1</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th>
-                                    <p>{netCount[alliance]}</p>
-                                </th>
-                                <th>
-                                    <p>{processorCount[alliance]}</p>
-                                </th>
-                                <th>
-                                    <p>{throughCount[alliance]}</p>
-                                </th>
+                            <tr style={{fontSize: "1.5rem"}}>
+                                <td>
+                                    <p>🤖 {netCountAuto[alliance]}</p>
+                                    <p>🎮 {netCountTeleop[alliance]}</p>
+                                </td>
+                                <td>
+                                    <p>🤖 {processorCountAuto[alliance]}</p>
+                                    <p>🎮 {processorCountTelop[alliance]}</p>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
