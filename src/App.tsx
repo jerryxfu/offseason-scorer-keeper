@@ -212,7 +212,7 @@ export default function App() {
                             </tr>
                             </thead>
                             <tbody>
-                            {([3, 2, 1] as const).map((robot) => (<tr key={robot}>
+                            {(alliance === "blue" ? ([1, 2, 3] as const) : ([3, 2, 1] as const)).map((robot) => (<tr key={robot}>
                                 <th>{robot}</th>
                                 <td>
                                     <span>{autoLeaveDropdowns[alliance][robot]}</span>
@@ -232,7 +232,7 @@ export default function App() {
                             </tr>
                             </thead>
                             <tbody>
-                            {([3, 2, 1] as const).map((robot) => (<tr key={robot}>
+                            {(alliance === "blue" ? ([1, 2, 3] as const) : ([3, 2, 1] as const)).map((robot) => (<tr key={robot}>
                                 <th>{robot}</th>
                                 <td>
                                     <span>{endgameDropdowns[alliance][robot]}</span>
@@ -347,7 +347,7 @@ export default function App() {
                 <button onClick={handleMatchReset}>Reset Match</button>
             </div>
             <div className="core_container">
-                {["blue", "red"].map(a => renderAllianceSection(a as "red" | "blue"))}
+                {(["blue", "red"] as Alliance[]).map(a => renderAllianceSection(a))}
             </div>
             <div className="copyright">
                 <p>© Developed by Jerry Fu 2025-{new Date().getFullYear()}</p>
