@@ -1,5 +1,4 @@
-import { io, Socket } from "socket.io-client";
-
+import {io, Socket} from "socket.io-client";
 
 export interface ServerToClientEvents {
     "score:ack": (msg: string) => void;
@@ -25,14 +24,6 @@ export interface ServerToClientEvents {
         count: number;
     }) => void;
 
-    "score.algae.processor:add": (data: {
-        alliance: "red" | "blue";
-        count: number;
-    }) => void;
-    "score.algae.processor:remove": (data: {
-        alliance: "red" | "blue";
-        count: number;
-    }) => void;
     "score.algae.net:add": (data: {
         alliance: "red" | "blue";
         count: number;
@@ -41,11 +32,19 @@ export interface ServerToClientEvents {
         alliance: "red" | "blue";
         count: number;
     }) => void;
+    "score.algae.processor:add": (data: {
+        alliance: "red" | "blue";
+        count: number;
+    }) => void;
+    "score.algae.processor:remove": (data: {
+        alliance: "red" | "blue";
+        count: number;
+    }) => void;
 
     "score.auto.leave:set": (data: {
         alliance: "red" | "blue";
         robotId: 1 | 2 | 3;
-        state: "yes" | "no";
+        value: "yes" | "no";
     }) => void;
 
     "score.endgame:set": (data: {

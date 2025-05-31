@@ -1,0 +1,46 @@
+:root {
+    font-family: "Outfit", "Arial", "sans-serif";
+    font-optical-sizing: auto;
+
+    --status-bar-c: tomato;
+}
+
+.hr_vert {
+    width: 1.5px;
+    height: 100%;
+    background: black;
+    align-self: center;
+}
+
+.hr_horiz {
+    width: 100%;
+    height: 1.5px;
+    background: black;
+    align-self: center;
+}
+
+.scale {
+    scale: 1.5;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+}
+
+h2, h3, h4, h5, h6 {
+    margin-bottom: 3px;
+}
+
+.copyright {
+    padding: 0 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}

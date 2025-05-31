@@ -1,0 +1,24 @@
+.statusbar {
+    display: flex;
+    flex-direction: row;
+    height: 2rem;
+    width: 100%;
+    padding: 0.25rem 0;
+    position: sticky;
+
+    top: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.statusbar_elements {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    li {
+        margin: 0 0.3rem;
+        list-style-type: none;
+    }
+}
