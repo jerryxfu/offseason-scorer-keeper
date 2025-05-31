@@ -333,31 +333,6 @@ export default function App() {
                             </tbody>
                         </table>
                     </div>
-                    <div className="container_col">
-                        <h4>Robot team numbers</h4>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Team number</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>0000</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>0000</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>0000</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
         );
@@ -372,7 +347,7 @@ export default function App() {
                 <button onClick={handleMatchReset}>Reset Match</button>
             </div>
             <div className="core_container">
-                {["red", "blue"].map(a => renderAllianceSection(a as "red" | "blue"))}
+                {["blue", "red"].map(a => renderAllianceSection(a as "red" | "blue"))}
             </div>
             <div className="copyright">
                 <p>© Developed by Jerry Fu 2025-{new Date().getFullYear()}</p>
